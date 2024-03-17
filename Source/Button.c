@@ -1,10 +1,12 @@
 //This is to supress depreciation errors which might happen since we are working with C
 #define _CRT_SECURE_NO_WARNINGS
 
-//Including header files
 #include"raylib.h"
-#include"Button.h"
 #include<stdio.h>
+//Including header files
+#include<stdlib.h>
+#include"Button.h"
+
 
 //Definition of button functions
 void loadButton(Button *b, char* filename)
@@ -43,3 +45,26 @@ void draw(Button *b)
 
 	DrawTexturePro(b->tex,b->SourceRect,rect,origin,0,WHITE);//White for no tint
 }
+
+//is hover function 
+
+void ishover(Button* b,Vector2 m,Camera2D cam) 
+{
+	//Initially assume mouse is not hovering on the button
+	b->hover = 0;
+	Rectangle bb;
+	bb.x = b->pos.x-(b->size.x/2.0);
+	bb.y = b->pos.y - (b->size.y);
+	bb.width = b->size.x;
+	bb.height = b->size.y;;
+	
+	bool collide = CheckCollisionPointRec( m,bb);
+
+	if (collide) 
+	{
+		b->hover = 1;
+	}
+
+
+}
+

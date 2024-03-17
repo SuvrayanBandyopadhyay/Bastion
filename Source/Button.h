@@ -4,6 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include"raylib.h"
 #include<stdio.h>
+#include<stdbool.h>
 
 typedef struct 
 {
@@ -12,6 +13,8 @@ typedef struct
 	Vector2 pos;
 	Vector2 size;
 
+	//To check if mouse is hovering on it or not
+	bool hover;
 
 }Button;
 
@@ -20,3 +23,6 @@ void loadButton(Button *b, char* filename);
 
 //The draw function
 void draw(Button *b);
+
+//The function to check if mouse is hovering on it or not
+bool ishover(Button* b, Vector2 m);
