@@ -20,8 +20,8 @@ void GameTitle()
     //Start Button Defintion
     Button b;
     loadButton(&b, "Start_Button.png");
-    b.pos.x = -850;
-    b.pos.y = -640;
+    b.pos.x = -700;
+    b.pos.y = -650;
     while (!WindowShouldClose())
     {
         ClearBackground(RAYWHITE);

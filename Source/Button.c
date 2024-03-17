@@ -29,6 +29,17 @@ void loadButton(Button *b, char* filename)
 
 void draw(Button *b)
 {
+	Rectangle rect;
+	rect.x = b->pos.x;
+	rect.y = b->pos.y;
+	rect.width = b->size.x;
+	rect.height = b->size.y;
+	//Defining the origin
+	Vector2 origin;
+	origin.x = b->size.x / 2;
+	origin.y = b->size.y / 2;
+	
 	//Just draw the button
-	DrawTextureEx(b->tex,b->pos,0,1.0,WHITE);//White for no tint
+
+	DrawTexturePro(b->tex,b->SourceRect,rect,origin,0,WHITE);//White for no tint
 }
