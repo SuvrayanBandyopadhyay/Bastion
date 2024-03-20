@@ -7,11 +7,16 @@
 
 //User defined headers
 #include"Button.h"
+#include"Tile.h"
+
+//Global variables
+Tilemanager tilelist;
+Camera2D camera;
+
+//Loading function
+void loadGame();
 
 
-//This defines the gamestate
 
-enum GameState{ Title,Loading,Playing };
-
-//The Title Screen
-void GameTitle() ;
+//The update function
+int updateGame();

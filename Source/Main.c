@@ -4,7 +4,8 @@
 #include"raylib.h"
 #include<stdio.h>
 //Custom Headers
-#include"GameEngine.h"
+#include"GameTitle.h"
+#include"Game.h"
 #include"Button.h"
 
 int main(void)
@@ -12,9 +13,24 @@ int main(void)
     
     InitWindow(GetScreenWidth(), GetScreenHeight(), "Game");
 
-    SetTargetFPS(120);
+    SetTargetFPS(60);
 
-    GameTitle();
+    loadGameTitle();
+    loadGame();
+    int a = 0;
+    while(!WindowShouldClose())
+    {
+        //Title
+        if (a == 0)
+            a = updateGameTitle();
+
+        //Gamepaly
+        else if (a == 1)
+            a = updateGame();
+        else
+            break;
+  
+    }
    
 
     // De-Initialization

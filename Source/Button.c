@@ -29,29 +29,49 @@ void loadButton(Button *b, char* filename)
 
 }
 
-void draw(Button *b)
+//Draw a button
+void drawButton(Button b)
 {
 	Rectangle rect;
-	rect.x = b->pos.x;
-	rect.y = b->pos.y;
-	rect.width = b->size.x;
-	rect.height = b->size.y;
+	rect.x = b.pos.x;
+	rect.y = b.pos.y;
+	rect.width = b.size.x;
+	rect.height = b.size.y;
 	//Defining the origin
 	Vector2 origin;
-	origin.x = b->size.x / 2;
-	origin.y = b->size.y / 2;
-	
+	origin.x = b.size.x / 2;
+	origin.y = b.size.y / 2;
+
 	//Just draw the button
 
-	DrawTexturePro(b->tex,b->SourceRect,rect,origin,0,WHITE);//White for no tint
+	DrawTexturePro(b.tex, b.SourceRect, rect, origin, 0, WHITE);//With a tint as well
 }
+
+//The draw funciton
+void drawButtonTint(Button b, Color c) 
+{
+	Rectangle rect;
+	rect.x = b.pos.x;
+	rect.y = b.pos.y;
+	rect.width = b.size.x;
+	rect.height = b.size.y;
+	//Defining the origin
+	Vector2 origin;
+	origin.x = b.size.x / 2;
+	origin.y = b.size.y / 2;
+
+	//Just draw the button
+
+	DrawTexturePro(b.tex, b.SourceRect, rect, origin, 0, c);//With a tint as well
+}
+
 
 //is hover function 
 
-void ishover(Button* b,Vector2 m,Camera2D cam) 
+bool isHoverButton(Button* b,Vector2 m) 
 {
-	//Initially assume mouse is not hovering on the button
 	b->hover = 0;
+	//Initially assume mouse is not hovering on the button
 	Rectangle bb;
 	bb.x = b->pos.x-(b->size.x/2.0);
 	bb.y = b->pos.y - (b->size.y);
@@ -63,8 +83,10 @@ void ishover(Button* b,Vector2 m,Camera2D cam)
 	if (collide) 
 	{
 		b->hover = 1;
+		return true;
 	}
 
+	return false;
 
 }
 
