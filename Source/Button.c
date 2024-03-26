@@ -11,8 +11,7 @@
 //Definition of button functions
 void loadButton(Button *b, char* filename)
 {
-	Texture2D temp = LoadTexture(filename);
-
+	
 	b->tex = LoadTexture(filename);
 	//Initial position is set to origin
 	b->pos.x = 0;
@@ -32,6 +31,7 @@ void loadButton(Button *b, char* filename)
 //Draw a button
 void drawButton(Button b)
 {
+	//Defining the area to draw in 
 	Rectangle rect;
 	rect.x = b.pos.x;
 	rect.y = b.pos.y;
@@ -71,15 +71,19 @@ void drawButtonTint(Button b, Color c)
 bool isHoverButton(Button* b,Vector2 m) 
 {
 	b->hover = 0;
+	//A small offset
+	m.y -= 30;
+
 	//Initially assume mouse is not hovering on the button
 	Rectangle bb;
 	bb.x = b->pos.x-(b->size.x/2.0);
 	bb.y = b->pos.y - (b->size.y);
+	
 	bb.width = b->size.x;
 	bb.height = b->size.y;;
-	
-	bool collide = CheckCollisionPointRec( m,bb);
 
+	bool collide = CheckCollisionCircleRec(m, 2.0, bb);
+	
 	if (collide) 
 	{
 		b->hover = 1;

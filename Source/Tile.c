@@ -1,6 +1,6 @@
 //This is to supress depreciation errors which might happen since we are working with C
 #define _CRT_SECURE_NO_WARNINGS
-
+#pragma once
 #include"raylib.h"
 #include<stdio.h>
 #include<stdlib.h>
@@ -8,11 +8,10 @@
 //Including header files
 
 #include"Tile.h"
-//Definition of button functions
+//Definition of Tile functions
 void loadTile(Tile* b, char* filename)
 {
-	Texture2D temp = LoadTexture(filename);
-
+	
 	b->tex = LoadTexture(filename);
 	//Initial position is set to origin
 	b->pos.x = 0;
@@ -28,7 +27,23 @@ void loadTile(Tile* b, char* filename)
 	b->size.y = (float)b->tex.height;
 
 }
+//Loading an existing texture
+void loadTileTex(Tile* b, Texture2D t)
+{
+	b->tex = t;
+	//Initial position is set to origin
+	b->pos.x = 0;
+	b->pos.y = 0;
+	//Initial source is the entire texture... One can modify this later if there are multiple sprites in the spritesheet
+	b->SourceRect.x = 0;
+	b->SourceRect.y = 0;
+	b->SourceRect.width = b->tex.width;
+	b->SourceRect.height = b->tex.height;
 
+	//Setting (initial) size of the button
+	b->size.x = (float)b->tex.width;
+	b->size.y = (float)b->tex.height;
+}
 
 //The draw funciton
 void drawTile(Tile b)
@@ -79,7 +94,7 @@ void drawTileTint(Tile* b, Color c)
 */
 //is hover function 
 
-bool ishover(Tile* b, Vector2 m)
+bool ishoverTile(Tile* b, Vector2 m)
 {
 	b->hover = 0;
 	//Initially assume mouse is not hovering on the button

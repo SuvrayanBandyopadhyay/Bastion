@@ -17,7 +17,7 @@ void loadGameTitle()
     camera.zoom = 1.0f;
 
 
-    loadButton(&start, "Start_Button.png");
+    loadButton(&start, "Resources/Start_Button.png");
     int xoff = -650;
     printf("%f", start.size.y);
     start.pos.x = xoff;
@@ -26,14 +26,14 @@ void loadGameTitle()
     start.size.y *= 7;
     //Settings Button
 
-    loadButton(&settings, "Settings.png");
+    loadButton(&settings, "Resources/Settings.png");
     settings.pos.x = xoff;
     settings.pos.y = -450;
     settings.size.x *= 6;
     settings.size.y *= 7;
     //Credits button
 
-    loadButton(&credits, "Credits.png");
+    loadButton(&credits, "Resources/Credits.png");
 
 
     credits.pos.x = xoff;
@@ -47,14 +47,15 @@ void loadGameTitle()
 //Update title screen it return the next state
 int updateGameTitle()
 {
+   
     int retval = 0;
     ClearBackground(RAYWHITE);
     BeginDrawing();
     //Get mouse position
     Vector2 mousepos = GetScreenToWorld2D(GetMousePosition(), camera);
     //Offset for cursor size
-    mousepos.y -= 10;
-    //Checking if mouse hovers for all buttons
+
+    //Checking if mouse hovers for all buttons\]
     isHoverButton(&start, mousepos);
     isHoverButton(&settings, mousepos);
     isHoverButton(&credits, mousepos);

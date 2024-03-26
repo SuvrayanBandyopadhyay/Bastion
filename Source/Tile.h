@@ -20,6 +20,8 @@ typedef struct
 
 //This loads the texture (Assuming there is only one sprite in the spritesheet for the button
 void loadTile(Tile* b, char* filename);
+//TO copy an existing texture
+void loadTileTex(Tile* b, Texture2D t);
 
 //The draw function
 void drawTile(Tile b);
@@ -27,7 +29,7 @@ void drawTile(Tile b);
 void drawTileTint(Tile* b, Color c);
 
 //The function to check if mouse is hovering on it or not
-bool ishover(Tile* b, Vector2 m);
+bool ishoverTile(Tile* b, Vector2 m);
 //Function to change draw area
 void setTexCoords(Tile* b, int x1, int y1, int x2, int y2);
 

@@ -8,11 +8,23 @@
 //User defined headers
 #include"Button.h"
 #include"Tile.h"
+#include"HUD.h"
 
 //Global variables
-Tilemanager tilelist;
-Camera2D camera;
 
+//The list of tiles
+Tilemanager tilelist;
+
+//The game camera
+Camera2D gamecam;
+//The HUD camera
+Camera2D hudcam;
+//The speed of our gamecamera
+float gamecamspeed;
+float maxzoom;
+float minzoom;
+//The HUD
+HUD hud;
 //Loading function
 void loadGame();
 

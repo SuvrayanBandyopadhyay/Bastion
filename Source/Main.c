@@ -1,6 +1,6 @@
 //This is to supress depreciation errors which might happen since we are working with C
 #define _CRT_SECURE_NO_WARNINGS
-
+#pragma once
 #include"raylib.h"
 #include<stdio.h>
 //Custom Headers
@@ -8,10 +8,13 @@
 #include"Game.h"
 #include"Button.h"
 
-int main(void)
+int main()
 {
-    
+   
+    //SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(GetScreenWidth(), GetScreenHeight(), "Game");
+    //No escape key
+    //SetExitKey(0); ////////Uncomment after testing
 
     SetTargetFPS(60);
 
@@ -24,12 +27,15 @@ int main(void)
         if (a == 0)
             a = updateGameTitle();
 
-        //Gamepaly
+        //Gameplay
         else if (a == 1)
             a = updateGame();
         else
             break;
-  
+        if (IsKeyPressed(KEY_ESCAPE)) 
+        {
+            printf("");
+        }
     }
    
 
