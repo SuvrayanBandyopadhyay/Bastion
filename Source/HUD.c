@@ -1,4 +1,4 @@
-#pragma once
+
 #define _CRT_SECURE_NO_WARNINGS
 #include"raylib.h"
 #include<stdio.h>
@@ -7,13 +7,19 @@
 #include<string.h>
 #include"HUD.h"
 
+//Since all dimesnsions are with regards to my screen
+int screen_height_hud = 1200;
+int screen_width_hud = 1920;
+//To convert the screen
+
+
 
 //The Load Function
-void loadHUD(HUD* b,char* filename,char* moneyname) 
+void loadHUD(HUD* b,char* filename) 
 {
 	//Load the texture
 	b->tex = LoadTexture(filename);
-	b->moneyicon = LoadTexture(moneyname);
+	b->moneyicon = LoadTexture("Resources/Money.png");
 	//Initial position is set to origin
 	b->pos.x = 0;
 	b->pos.y = 0;
@@ -39,18 +45,35 @@ void loadHUD(HUD* b,char* filename,char* moneyname)
 
 	//Load the build basic tower button
 	loadButton(&b->buildBasicTower, "Resources/Basic_Tower_Button.png");
+	//Wall Button
+	loadButton(&b->buildWall, "Resources/Wall_Button.png");
+	//Load Sniper Tower
+	loadButton(&b->buildSniper, "Resources/Sniper_Button.png");
 	
-	//Loading textures for placing when we are building
-	b->build_tex = malloc(1 * sizeof(Texture2D));
-	b->build_tex[0]= LoadTexture("Resources/Basic_Tower.png");
+	//Load destroy button
+	loadButton(&b->destroy, "Resources/Destroy.png");
+	
 
+	//Loading textures for placing when we are building
+	b->build_tex = malloc(3 * sizeof(Texture2D));
+	b->build_tex[0]= LoadTexture("Resources/Basic_Tower.png");
+	//Now For wall textures
+	b->build_tex[1] = LoadTexture("Resources/Wall.png");
+	//Sniper textures
+	b->build_tex[2] = LoadTexture("Resources/Sniper_Tower.png");
+
+	b->click = 0;
 }
 
 
-
+//DONT USE CONV ON XOFF AND B.POS
 //The Draw Function (Also contains HUD login)
 void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 {
+	int w = GetScreenWidth();
+	int h = GetScreenHeight();
+
+	b->click = 0;
 	if (b->show == 1)
 	{
 		//Defining the area to draw in 
@@ -66,12 +89,20 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 
 		//Basic HUD drawing (Common for all states)
 		Color c = { 255,255,255,200 };
+		//Check colisition 
+
+		if (CheckCollisionCircleRec(mpos, 10, rect)) 
+		{
+	
+			b->click = 1;
+		}
+
 		DrawTexturePro(b->tex, b->SourceRect, rect, origin, 0, c);//With a tint as well
 		//We draw the build button
 
 		//Now for the build button
-		b->Build.pos.x = rect.x + 542;
-		b->Build.pos.y = rect.y - 135;
+		b->Build.pos.x = rect.x + conv_width(542,w);
+		b->Build.pos.y = rect.y - conv_height(135,h);
 		isHoverButton(&b->Build, mpos);
 		if (b->Build.hover == 0)
 			drawButton(b->Build);
@@ -82,13 +113,14 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 			//If Button is clicked
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 			{
+				b->click = 1;
 				b->state = 2;
 			}
 		}
 
 		//Now for the stats button
-		b->Stats.pos.x = rect.x + 542;
-		b->Stats.pos.y = rect.y - 7;
+		b->Stats.pos.x = rect.x + conv_width(542,w);
+		b->Stats.pos.y = rect.y - conv_height(7,h);
 		isHoverButton(&b->Stats, mpos);
 		if (b->Stats.hover == 0)
 			drawButton(b->Stats);
@@ -99,6 +131,8 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 			//If Button is clicked
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 			{
+				b->click = 1;
+				
 				b->state = 1;
 				//Reset the build state
 				b->buildstate = 0;
@@ -110,10 +144,10 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 		if (b->state == 1)
 		{
 			//Now we draw the money we have 
-			DrawTexture(b->moneyicon, rect.x - 450, rect.y - 170, WHITE);
+			DrawTexture(b->moneyicon, rect.x - conv_width(450,w), rect.y - conv_height(170,h), WHITE);
 			char moneystr[1000];
 			sprintf(moneystr, "%d", money);
-			DrawText(moneystr, rect.x - 300, rect.y - 150, 75, BLACK);
+			DrawText(moneystr, rect.x - conv_width(300,w), rect.y - conv_height(150,h), 75, BLACK);
 
 
 
@@ -123,22 +157,97 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 		//If we are in the build state
 		if (b->state == 2)
 		{
-			//Build Button logic 
-			b->buildBasicTower.pos.x = rect.x - 250;
-			b->buildBasicTower.pos.y = rect.y - 90;
+			//Build Button positioning  
+			//Buld basic tower positioning
+			float xoff = rect.x - conv_width(250,w);
+
+			b->buildBasicTower.pos.x = xoff;
+			b->buildBasicTower.pos.y = rect.y - conv_height(90,h);
+			//Build Wall positioning
+			b->buildWall.pos.x = xoff;
+			b->buildWall.pos.y = rect.y;
+			//Build Sniper positioning
+			b->buildSniper.pos.x = xoff;
+			b->buildSniper.pos.y = rect.y + conv_height(90, h);
+
+
+			//Destroy positioning
+			b->destroy.pos.x = xoff + conv_width(950);
+			b->destroy.pos.y = rect.y - conv_height(150);
+		
+
+			//Checking if the mouse is hovering on the buttons
 			isHoverButton(&b->buildBasicTower, mpos);
+			isHoverButton(&b->buildWall, mpos);
+			isHoverButton(&b->buildSniper, mpos);
+
+			Vector2 despos = mpos;
+			despos.y = mpos.y + b->destroy.size.y;
+			isHoverButton(&b->destroy, despos);
+			
+
+			bool onehover = 0;//Only hovering on 1 is possible
+			//Basic Tower
 			if (b->buildBasicTower.hover == 0)
 				drawButton(b->buildBasicTower);
 			else
 			{
 				drawButtonTint(b->buildBasicTower, GRAY);
-
+				onehover = 1;
 				//If the key is selected set build state to 1 (basic tower)
 				if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 				{
+					b->click = 1;
 					b->buildstate = 1;
 				}
 			}
+
+			//Wall
+			if (b->buildWall.hover == 0|| onehover == 1)
+				drawButton(b->buildWall);
+			else 
+			{
+				drawButtonTint(b->buildWall, GRAY);
+				onehover = 1;
+				//If the key is selected set build state to 1 (basic tower)
+				if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+				{
+					b->click = 1;
+					b->buildstate = 2;
+				}
+			}
+			//Sniper
+			if (b->buildSniper.hover == 0 || onehover == 1)
+				drawButton(b->buildSniper);
+			else
+			{
+				drawButtonTint(b->buildSniper, GRAY);
+				onehover = 1;
+				//If the key is selected set build state to 1 (basic tower)
+				if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+				{
+					b->click = 1;
+					b->buildstate = 3;
+				}
+			}
+
+			//Build state -1 is for destroying
+			if (b->destroy.hover == 0 || onehover == 1)
+				drawButton(b->destroy);
+			else
+			{
+				drawButtonTint(b->destroy, GRAY);
+				onehover = 1;
+				//If the key is selected set build state to 1 (basic tower)
+				if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+				{
+					b->click = 1;
+					b->buildstate = -1;
+				}
+			}
+
+
+
 
 		}
 	}

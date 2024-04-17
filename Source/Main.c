@@ -8,10 +8,24 @@
 #include"Game.h"
 #include"Button.h"
 
+
 int main()
 {
+    //Blank map (Temporary)
+    int mapsize = 80;
+    int* blank_map = malloc(mapsize*mapsize*sizeof(int*));
+    
+    //Row
+    for (int i = 0; i < mapsize; i++) 
+    {
+        //Column
+        for (int j = 0; j < mapsize; j++) 
+        {
+            blank_map[i*mapsize+j] = 0;
+        }
+    }
    
-    //SetConfigFlags(FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(GetScreenWidth(), GetScreenHeight(), "Game");
     //No escape key
     //SetExitKey(0); ////////Uncomment after testing
@@ -19,7 +33,7 @@ int main()
     SetTargetFPS(60);
 
     loadGameTitle();
-    loadGame();
+    loadGame(blank_map,mapsize,mapsize);
     int a = 0;
     while(!WindowShouldClose())
     {
@@ -32,10 +46,7 @@ int main()
             a = updateGame();
         else
             break;
-        if (IsKeyPressed(KEY_ESCAPE)) 
-        {
-            printf("");
-        }
+     
     }
    
 

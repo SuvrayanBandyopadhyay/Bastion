@@ -12,7 +12,7 @@ typedef struct
 	Texture2D tex;
 	Rectangle SourceRect;//Defines the part of the texture we are going to use
 	Vector2 pos;
-	Vector2 size;
+	float scale;
 
 	bool hover;//Checks if mouse is on the button or not
 

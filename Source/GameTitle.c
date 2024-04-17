@@ -7,28 +7,45 @@
 #include"Button.h"
 #include"Tile.h"
 
+//Since all dimesnsions are with regards to my screen
+int screen_height = 1200;
+int screen_width = 1920;
+//To convert the screen
+int conv_height(int y,int act_height) 
+{
+    return(int)(((float)y / (float)screen_height) * (float)act_height);
+}
+int conv_width(int x,int act_width)
+{
+    return(int)(((float)x / (float)screen_width) * (float)act_width);
+}
+
 
 // Load game title
 void loadGameTitle() 
 {
+    printf("%d,%d\n", GetScreenWidth(), GetScreenHeight());
     camera.target = (Vector2){ 0, 0 };
     camera.offset = (Vector2){ 1000, 1000 };
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
+    //To avoid resolution problems
+    int w = GetScreenWidth();
+    int h = GetScreenHeight();
 
     loadButton(&start, "Resources/Start_Button.png");
     int xoff = -650;
-    printf("%f", start.size.y);
-    start.pos.x = xoff;
-    start.pos.y = -600;
+ 
+    start.pos.x = conv_width(xoff,w);
+    start.pos.y = conv_height(-600,h);
     start.size.x *= 6;
     start.size.y *= 7;
     //Settings Button
 
     loadButton(&settings, "Resources/Settings.png");
-    settings.pos.x = xoff;
-    settings.pos.y = -450;
+    settings.pos.x = conv_width(xoff, w);
+    settings.pos.y = conv_height( - 450,h);
     settings.size.x *= 6;
     settings.size.y *= 7;
     //Credits button
@@ -36,8 +53,8 @@ void loadGameTitle()
     loadButton(&credits, "Resources/Credits.png");
 
 
-    credits.pos.x = xoff;
-    credits.pos.y = -300;
+    credits.pos.x = conv_width(xoff,w);
+    credits.pos.y = conv_height(- 300,h);
     credits.size.x *= 6;
     credits.size.y *= 7;
 
@@ -48,6 +65,10 @@ void loadGameTitle()
 int updateGameTitle()
 {
    
+    //To avoid resolution problems
+    int w = GetScreenWidth();
+    int h = GetScreenHeight();
+
     int retval = 0;
     ClearBackground(RAYWHITE);
     BeginDrawing();
@@ -81,7 +102,7 @@ int updateGameTitle()
     //The Drawing part
     BeginMode2D(camera);
     //A gray screen for effect
-    DrawRectangle(-1000, -1000, 750, 1500, LIGHTGRAY);
+    DrawRectangle(conv_width( - 1000,w), conv_height( - 1000,h), conv_width(750,w), conv_height(1500,h), LIGHTGRAY);
 
     //Drawing the start button normally if no hover is there
     if (start.hover == 0)
@@ -106,9 +127,9 @@ int updateGameTitle()
 
 
     //Define the name of our game
-    DrawText("BASTION", 425, -950, 100, DARKGRAY);
+    DrawText("BASTION", conv_width(425,w), conv_height(- 950,h), conv_height(100,h), DARKGRAY);
     //Version name as well;
-    DrawText("Version 1.0", 425, -850, 30, DARKGRAY);
+    DrawText("Version 1.0", conv_width(425,w), conv_height(- 850,h), conv_height(50,h), DARKGRAY);
 
     //End drawing and refresh the screen
 
