@@ -39,14 +39,14 @@ int NoOfEnemies(int wave)
 float EnemeyHealth(int wave) 
 {
 	//A formula for calculating enemy health with wave
-	float n = 20.0 + 3.5*wave + 2.5 * log(wave);
+	float n = 20.0 + 4.5*wave + 3.5 * log(wave);
 	return n;
 };
 
 float dmgEnemy(int wave) 
 {
 	//For calculating damage
-	float n = 8.0 + 2.5* wave + 0.5 * log(wave);
+	float n = 8.0 + 3.5* wave + 2.5 * log(wave);
 	return n;
 }
 

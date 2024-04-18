@@ -36,6 +36,9 @@ double tot_time;
 //Wave number
 int wave;
 
+//Money
+float m;
+
 //The HUD
 HUD hud;
 //The size of our tiles
@@ -52,6 +55,7 @@ int* original_map;
 Building Basic_Tower;
 Building Wall;//Walls are Buildings with 0 range and 0 damage and with comparatively more health;
 Building Sniper;
+Building Mine;
 
 Base base;
 

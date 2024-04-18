@@ -149,12 +149,14 @@ float dist(float x1, float y1, float x2, float y2)
 }
 
 //Update all buildings
-void updateBuildings(Buildingmanager* buildman, Bulletmanager* enembullman,Bulletmanager* allbullman, int** map, int* original_map, int mapwidth,Enemymanager eneman,float deltatime,float tilesize)
+void updateBuildings(Buildingmanager* buildman, Bulletmanager* enembullman,Bulletmanager* allbullman, int** map, int* original_map, int mapwidth,Enemymanager eneman,float deltatime,float tilesize,float* income)
 {
 
 	int id = 0;
 	while (id < buildman->n)
 	{
+		*income += buildman->Buildings[id].income;
+
 		int j = 0;
 		//Checking damage for every bullet
 		while (j < enembullman->n)

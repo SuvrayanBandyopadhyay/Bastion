@@ -6,13 +6,14 @@
 //Custom Headers
 #include"GameTitle.h"
 #include"Game.h"
+#include"GameOver.h"
 #include"Button.h"
 
 
 int main()
 {
-    //Blank map (Temporary)
-    int mapsize = 80;
+    //Blank map 
+    int mapsize = 60;
     int* blank_map = malloc(mapsize*mapsize*sizeof(int*));
     
     //Row
@@ -44,16 +45,23 @@ int main()
         //Gameplay
         else if (a == 1)
             a = updateGame();
+
+        else if (a == 2) 
+        {
+            a = updateGameOver();
+        }
+
+
         else
             break;
      
     }
-   
-
+    
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
+   
 
     return 0;
 }

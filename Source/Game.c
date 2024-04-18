@@ -75,6 +75,16 @@ Enemy e;
 //Loading function
 void loadGame(int *gamemap,unsigned int width,unsigned int height)
 {
+	//Clearing previous iteration
+	//free(enembullman.Bullets);
+	//free(allybullman.Bullets);
+	//free(enemman.Enemies);
+	//free(buildman.Buildings);
+	enembullman.n = 0;
+	allybullman.n = 0;
+	enemman.n = 0;
+	buildman.n = 0;
+
 	//Randomness
 	srand(time(NULL));
 
@@ -134,30 +144,32 @@ void loadGame(int *gamemap,unsigned int width,unsigned int height)
 	//Defining the various Buildings
 	//THE BASIC TOWER
 	Basic_Tower.cost = 40.0;
-	Basic_Tower.range = 7;
-	Basic_Tower.health = 50;
+	Basic_Tower.range = 8;
+	Basic_Tower.health = 80;
 	Basic_Tower.isbuilt = 0;//Default state
 	Basic_Tower.scale = 1.0;
-	Basic_Tower.dmg = 6;
+	Basic_Tower.dmg = 8;
 	Basic_Tower.reload = 1;
 	Basic_Tower.height = 2;
 	Basic_Tower.width = 2;
 	Basic_Tower.type = 1;
+	Basic_Tower.income = 0;
 	//THE WALL
 	Wall.cost = 10;
 	Wall.range = 0;
-	Wall.health = 80;
+	Wall.health = 120;
 	Wall.isbuilt = 0;//Default state
 	Wall.scale = 1.0;
-	Wall.dmg = 1;
+	Wall.dmg = 0;
 	Wall.reload = 99999999999;
 	Wall.height = 1;
 	Wall.width = 1;
 	Wall.type = 2;
+	Wall.income = 0;
 	//Sniper Definition
 	Sniper.cost = 60.0;
 	Sniper.range = 20;
-	Sniper.health = 50;
+	Sniper.health = 60;
 	Sniper.isbuilt = 0;//Default state
 	Sniper.scale = 1.0;
 	Sniper.dmg = 20;
@@ -165,6 +177,20 @@ void loadGame(int *gamemap,unsigned int width,unsigned int height)
 	Sniper.height = 2;
 	Sniper.width = 2;
 	Sniper.type = 3;
+	Sniper.income = 0;
+	//THE WALL
+	Mine.cost = 35;
+	Mine.range = 0;
+	Mine.health = 120;
+	Mine.isbuilt = 0;//Default state
+	Mine.scale = 1.0;
+	Mine.dmg = 0;
+	Mine.reload = 99999999999;
+	Mine.height = 2;
+	Mine.width = 2;
+	Mine.type = 4;
+	Mine.income = 0.6;
+
 
 
 	//Loading base
@@ -195,8 +221,16 @@ void loadGame(int *gamemap,unsigned int width,unsigned int height)
 
 	//Wave Number
 	wave = 0;
+
+	//Initial Money
+	m = 1000;
+
+	//Initial Camera Position
+	gamecam.target.x = (mapwidth / 2.75)*(tilesize);
+	gamecam.target.y = (mapheight / 2.5)*(tilesize);
+
 }
-float m=1500;
+
 
 
 
@@ -330,6 +364,39 @@ void buildfunc(HUD h, Buildingmanager* buildman,Vector2 mpos,int** map,float *mo
 		}
 	}
 
+	//Fow Mine
+	else if (hud.buildstate == 4)
+	{
+		//Here size is 1
+		if (canBePlaced(*map, tilex, tiley, Mine.width, Mine.height, mapwidth, mapheight) && *money >= Mine.cost)
+		{
+			DrawTextureEx(hud.build_tex[3], dpos, 0, 1.0, okc);
+			//If we press the build key
+
+			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+			{
+				Building t;
+				t = Mine;
+				loadBuildingTex(&t, hud.build_tex[3]);
+				t.pos = dpos;
+				t.ix = tilex;
+				t.iy = tiley;
+				//Subtracting the cost
+				*money -= t.cost;
+
+				//buildman is already a pointer
+				pushBuildingManager(buildman, t);
+				place(map, tilex, tiley, t.width, t.height, mapwidth, t.type);
+			}
+
+		}
+		else
+		{
+			//Texture cant be drawn
+			DrawTextureEx(hud.build_tex[3], dpos, 0, 1.0, nokc);
+		}
+	}
+
 
 }
 float nextwave = 0;
@@ -337,7 +404,7 @@ float nextwave = 0;
 int updateGame()
 {
 	
-
+	float income_per_sec = 0;
 	tot_time += GetFrameTime();
 	nextwave += GetFrameTime();
 	//The return value
@@ -350,14 +417,17 @@ int updateGame()
 
 	//Camera testing
 	//We multiply GetFrameTime() in order to have uniform movement irrespect of frame rate
-	if (IsKeyDown(KEY_D)&&gamecam.target.x<(mapwidth+1)*tilesize)
+	if (IsKeyDown(KEY_D)&&gamecam.target.x<(mapwidth+-(30/gamecam.zoom))*tilesize)
 		gamecam.target.x = gamecam.target.x + gamecamspeed * GetFrameTime() * (1.0 / gamecam.zoom);
 	if (IsKeyDown(KEY_A) && gamecam.target.x >( - 1 * tilesize))
 		gamecam.target.x = gamecam.target.x - gamecamspeed * GetFrameTime() * (1.0 / gamecam.zoom);
 	if (IsKeyDown(KEY_W) && gamecam.target.y > (-1 * tilesize))
 		gamecam.target.y = gamecam.target.y - gamecamspeed * GetFrameTime() * (1.0 / gamecam.zoom);
-	if (IsKeyDown(KEY_S) && gamecam.target.y < (mapheight + 1) * tilesize)
+	if (IsKeyDown(KEY_S) && gamecam.target.y < (mapheight - (17 / gamecam.zoom)) * tilesize)
 		gamecam.target.y = gamecam.target.y + gamecamspeed * GetFrameTime() * (1.0 / gamecam.zoom);
+
+
+
 	//The Zoom logic
 	float wheel = GetMouseWheelMove();
 	float wheelconst = 0.1;
@@ -392,7 +462,7 @@ int updateGame()
 	
 	//The Building logic part
 	//Here we update all the buildings
-	updateBuildings(&buildman, &enembullman,&allybullman, &map, original_map, mapwidth,enemman,GetFrameTime(),tilesize);
+	updateBuildings(&buildman, &enembullman,&allybullman, &map, original_map, mapwidth,enemman,GetFrameTime(),tilesize,&income_per_sec);
 
 
 	//For Base
@@ -403,7 +473,7 @@ int updateGame()
 		{
 			base.health -= enembullman.Bullets[id].dmg;
 			deleteindexBulletManager(&enembullman, id);
-			printf("%f\n", base.health);
+			
 		}
 
 		else
@@ -424,7 +494,10 @@ int updateGame()
 	{
 		drawTile(tilelist.tiles[i]);
 	}
-	m += GetFrameTime() * 10;//Temporary
+
+	//Add base
+	income_per_sec += base.income;
+	m += GetFrameTime() * income_per_sec;//Temporary
 
 
 	//Variables to keep track of the buildings to destroy
@@ -480,6 +553,12 @@ int updateGame()
 	{
 		nextwave = 0;
 		wave++;
+
+		//Base Health increases every wave (Covers for repairs and upgrades)
+		if (wave != 0)
+		{
+			base.health += 20;
+		}
 		create_Wave(&enemman, wave, mapwidth, mapheight, tilesize, Enemy_Texture);
 	
 	}
@@ -500,7 +579,7 @@ int updateGame()
 	BeginMode2D(hudcam);
 
 	//Update the HUD
-	updateHud(&hud, mpos, gamecam.target, (int)m);
+	updateHud(&hud, mpos, gamecam.target, (int)m,(int)base.health);
 	
 	//Shifting back to the game camera
 	BeginMode2D(gamecam);
@@ -514,6 +593,12 @@ int updateGame()
 	else
 	{
 		ShowCursor();
+	}
+
+	//End condition 
+	if (base.health < 0) 
+	{
+		return 2;
 	}
 
 	EndDrawing();

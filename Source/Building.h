@@ -40,6 +40,8 @@ typedef struct
 	int width;
 	int height;
 	bool isbuilt;
+
+	float income;
 }Building;
 
 

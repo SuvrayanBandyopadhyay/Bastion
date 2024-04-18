@@ -7,7 +7,7 @@
 //User includes
 #include"Button.h"
 
-typedef struct 
+typedef struct
 {
 	bool show;
 	Texture2D tex;
@@ -16,7 +16,8 @@ typedef struct
 	Rectangle SourceRect;
 
 	Texture2D moneyicon;
-	
+	Texture2D healthicon;
+
 	//The Build Button
 	Button Build;
 	//The Stats Button
@@ -25,12 +26,14 @@ typedef struct
 	///ALL THE BUILDING BUTTONS
 	//Destroy button 
 	Button destroy;
-	
+
 	//The Basic Tower Button
-	
+
 	Button buildBasicTower;
 	Button buildWall;
 	Button buildSniper;
+
+	Button buildMine;
 
 
 	//To decide which state we are in
@@ -44,10 +47,11 @@ typedef struct
 
 	//This bool is to check if we have clicked a button in order to prevent accidental placement while clicking buttons
 	bool click;
-}HUD;
+}
+HUD;
 
 //Our HUD will have buttons, resource count etc.
 void loadHUD(HUD *b,char* filename);
 
 //it takes the number of resources we have and displays it for the user
-void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money);
+void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money,int health);

@@ -20,6 +20,8 @@ void loadHUD(HUD* b,char* filename)
 	//Load the texture
 	b->tex = LoadTexture(filename);
 	b->moneyicon = LoadTexture("Resources/Money.png");
+	b->healthicon = LoadTexture("Resources/Health.png");
+
 	//Initial position is set to origin
 	b->pos.x = 0;
 	b->pos.y = 0;
@@ -49,18 +51,24 @@ void loadHUD(HUD* b,char* filename)
 	loadButton(&b->buildWall, "Resources/Wall_Button.png");
 	//Load Sniper Tower
 	loadButton(&b->buildSniper, "Resources/Sniper_Button.png");
-	
+	//Load Mine Button
+	loadButton(&b->buildMine, "Resources/Mine_Button.png");
+
+
 	//Load destroy button
 	loadButton(&b->destroy, "Resources/Destroy.png");
 	
+	
 
 	//Loading textures for placing when we are building
-	b->build_tex = malloc(3 * sizeof(Texture2D));
+	b->build_tex = malloc(4 * sizeof(Texture2D));
 	b->build_tex[0]= LoadTexture("Resources/Basic_Tower.png");
 	//Now For wall textures
 	b->build_tex[1] = LoadTexture("Resources/Wall.png");
 	//Sniper textures
 	b->build_tex[2] = LoadTexture("Resources/Sniper_Tower.png");
+	//Mine Textures
+	b->build_tex[3] = LoadTexture("Resources/Mine.png");
 
 	b->click = 0;
 }
@@ -68,7 +76,7 @@ void loadHUD(HUD* b,char* filename)
 
 //DONT USE CONV ON XOFF AND B.POS
 //The Draw Function (Also contains HUD login)
-void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
+void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money,int health)
 {
 	int w = GetScreenWidth();
 	int h = GetScreenHeight();
@@ -149,6 +157,11 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 			sprintf(moneystr, "%d", money);
 			DrawText(moneystr, rect.x - conv_width(300,w), rect.y - conv_height(150,h), 75, BLACK);
 
+			//Now we draw the Health we have 
+			DrawTexture(b->healthicon, rect.x - conv_width(450, w), rect.y - conv_height(40, h), WHITE);
+			char healthstr[1000];
+			sprintf(healthstr, "%d", health);
+			DrawText(healthstr, rect.x - conv_width(300, w), rect.y - conv_height(-10, h), 75, BLACK);
 
 
 		}
@@ -170,16 +183,21 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 			b->buildSniper.pos.x = xoff;
 			b->buildSniper.pos.y = rect.y + conv_height(90, h);
 
+			//Mine Position
+			b->buildMine.pos.x = xoff+conv_width(400,w);
+			b->buildMine.pos.y = rect.y - conv_height(90, h);
+
 
 			//Destroy positioning
-			b->destroy.pos.x = xoff + conv_width(950);
-			b->destroy.pos.y = rect.y - conv_height(150);
+			b->destroy.pos.x = xoff + conv_width(750);
+			b->destroy.pos.y = rect.y - conv_height(165);
 		
 
 			//Checking if the mouse is hovering on the buttons
 			isHoverButton(&b->buildBasicTower, mpos);
 			isHoverButton(&b->buildWall, mpos);
 			isHoverButton(&b->buildSniper, mpos);
+			isHoverButton(&b->buildMine, mpos);
 
 			Vector2 despos = mpos;
 			despos.y = mpos.y + b->destroy.size.y;
@@ -230,6 +248,22 @@ void updateHud(HUD *b, Vector2 mpos,Vector2 campos,int money)
 					b->buildstate = 3;
 				}
 			}
+
+			//Mine
+			if (b->buildMine.hover == 0 || onehover == 1)
+				drawButton(b->buildMine);
+			else
+			{
+				drawButtonTint(b->buildMine, GRAY);
+				onehover = 1;
+				//If the key is selected set build state to 1 (basic tower)
+				if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+				{
+					b->click = 1;
+					b->buildstate = 4;
+				}
+			}
+
 
 			//Build state -1 is for destroying
 			if (b->destroy.hover == 0 || onehover == 1)

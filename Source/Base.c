@@ -21,7 +21,7 @@ void loadBase(Base* b, char* filename)
 
 	b->scale = 1.0;
 
-	b->income = 1.5;//1.5 money per second
+	b->income = 5;//1.5 money per second
 }
 //Loading an existing texture
 void loadBaseTex(Base* b, Texture2D t)
