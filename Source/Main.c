@@ -7,6 +7,7 @@
 #include"GameTitle.h"
 #include"Game.h"
 #include"GameOver.h"
+#include"Credits.h"
 #include"Button.h"
 
 
@@ -29,10 +30,11 @@ int main()
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(GetScreenWidth(), GetScreenHeight(), "Game");
     //No escape key
-    //SetExitKey(0); ////////Uncomment after testing
+    //SetExitKey(0);
 
     SetTargetFPS(60);
 
+    load_Credits();
     loadGameTitle();
     loadGame(blank_map,mapsize,mapsize);
     int a = 0;
@@ -49,6 +51,11 @@ int main()
         else if (a == 2) 
         {
             a = updateGameOver();
+        }
+
+        else if (a == 3) 
+        {
+            a = update_Credits();
         }
 
 

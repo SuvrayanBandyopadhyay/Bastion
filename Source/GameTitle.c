@@ -90,7 +90,7 @@ int updateGameTitle()
     //For settings
     if (settings.hover == 1 && IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
     {
-        retval= 2;//Go to settings
+        retval= 4;//Go to settings
     }
     //For credits
     if (credits.hover == 1 && IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
