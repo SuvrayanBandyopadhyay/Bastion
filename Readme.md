@@ -1,4 +1,9 @@
-# Bastion
+BASTION
+##########################################
+A tower defense game 
+
+
+
 This project is a CS project for group 2 from group 11 to 20
 
 A basic overview of the file structure (so far is)
