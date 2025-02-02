@@ -4,10 +4,9 @@ BASTION
 
 A tower defense game 
 
+<img width="511" alt="image" src="https://github.com/user-attachments/assets/553e2f4f-8c77-4cf0-bf84-fab6554b43dd" />
 
-
-
-This project is a CS project for group 2 from group 11 to 20
+This was written as a CS project for group 2 f
 
 A basic overview of the file structure (so far is)
 
