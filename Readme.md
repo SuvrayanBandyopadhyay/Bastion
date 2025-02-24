@@ -1,6 +1,5 @@
-BASTION
+# BASTION
 
-##########################################
 
 A base-building game 
 
@@ -8,7 +7,7 @@ A base-building game
 
 This was written as a CS project for group 2 
 
-A basic overview of the file structure (so far is)
+# Description of Folders
 
 Source:
 Contains C files,header and other programming related items
