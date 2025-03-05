@@ -1,11 +1,10 @@
 # BASTION
 
 
-A base-building game 
+A base-building game with tower-defence elements
 
 <img width="511" alt="image" src="https://github.com/user-attachments/assets/553e2f4f-8c77-4cf0-bf84-fab6554b43dd" />
 
-This was written as a CS project for group 2 
 
 # Description of Folders
 
